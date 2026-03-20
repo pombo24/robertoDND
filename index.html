@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+<style>
+:root{--card:#17171c;--soft:#222229;--line:#8b0000;--text:#ece8de;--muted:#b7a9a9;--accent:#8b0000;--green:#3f8f52;--temp:#4e8bb7}
+*{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#09090c,#141419 45%,#101015)}header,nav{position:sticky;z-index:10;background:#121218;border-bottom:1px solid var(--line)}header{top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px}nav{top:53px;padding:8px 14px;display:flex;gap:8px;flex-wrap:wrap}
+main{max-width:1400px;margin:auto;padding:12px}.page{display:none}.page.active{display:block}.grid{display:grid;gap:12px}.two{grid-template-columns:1fr 1fr}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sheetScroller{overflow-x:auto}.sheetLayout{display:grid;grid-template-columns:320px minmax(460px,1fr) 320px;gap:12px;min-width:1124px;align-items:start}.sheetLayout>*{min-width:0}
+.card,.passiveBox,.miniStat,.statbox,.attack,.spell,.check,.abilityItem,.slot,.log,.xpBox{background:var(--card);border:1px solid var(--line);border-radius:12px}.card{padding:12px;overflow:visible}.hero{padding:20px}.hero h1{margin:0 0 8px;font-size:28px}.muted,.hero p{color:var(--muted)}h2{margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+button{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}button.alt{background:#191920;border:1px solid var(--line)}nav button{border-radius:999px;padding:7px 12px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.actions button{padding:6px 8px;font-size:11px}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#111116;color:var(--text)}textarea{min-height:64px;resize:vertical}.pill{display:inline-block;padding:4px 8px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--muted);background:var(--soft)}.center{text-align:center}.big{font-size:22px;font-weight:800}
+.sheetGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.sheetCard{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--soft);cursor:pointer}.sheetCardMain{display:flex;gap:10px;align-items:center;min-width:0;flex:1}.sheetCardActions{display:flex;gap:6px;align-items:center}.dangerBtn{background:#5b1616;border:1px solid #8b0000}.sheetCard img{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}.sheetName{font-weight:700}
+.avatar{width:120px;height:120px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--soft)}.avatar img{width:100%;height:100%;object-fit:cover}.avatarCluster{display:grid;grid-template-columns:64px 120px 64px;grid-template-rows:56px 56px 86px auto;gap:8px;align-items:center;justify-content:center}.avatarCluster .avatar{grid-column:2;grid-row:1/span 2}.miniStat{height:56px;padding:6px;display:flex;flex-direction:column;justify-content:center;align-items:center}.miniStat label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px}.miniStat input{text-align:center;font-weight:700;padding:6px}.passiveBox{grid-column:1/span 3;padding:8px;text-align:center;min-height:86px;display:flex;flex-direction:column;justify-content:center}.passiveBox .value{font-size:22px;font-weight:800}
+.vitalsUnderPassive{grid-column:1/span 3;display:grid;grid-template-columns:1fr 1fr;gap:8px}.vitalsUnderPassive .statbox{min-height:74px;display:flex;flex-direction:column;justify-content:center}
+.profile{display:grid;grid-template-columns:260px 1fr;gap:14px;align-items:start}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.identityGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.compactField{display:flex;flex-direction:column;justify-content:center}.compactField input{height:100%}.sheetMetaTight{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.sheetMetaTight .xpBox,.sheetMetaTight .statbox{height:86px;display:flex;flex-direction:column;justify-content:center}.statbox,.attack,.spell,.check,.abilityItem,.log,.xpBox{padding:10px}.log{height:180px;overflow:auto}
+.topAttrs{margin:0 0 18px;padding:14px;overflow-x:auto}.attrs{display:grid;grid-template-columns:repeat(6,minmax(110px,1fr));gap:12px;padding-bottom:20px}.attr{display:flex;flex-direction:column;align-items:center;min-height:118px;padding:10px 10px 26px;border:2px solid #c63a32;border-radius:10px;background:linear-gradient(180deg,#f8f2ea,#e7e1d8);color:#111;position:relative}.attrName{font-size:10px;font-weight:700;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;text-align:center}.attr .mod{font-size:20px;font-weight:800;background:#d9d9d9;border:2px solid #c8c8c8;border-radius:6px;padding:8px 12px;min-width:58px;text-align:center;margin-bottom:12px}.attr input{width:52px;height:52px;text-align:center;font-weight:800;font-size:24px;border-radius:999px;border:3px solid #c63a32;background:#fff;color:#111;position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);padding:0}
+.hpbar{height:12px;border-radius:999px;background:#ece2d4;border:1px solid var(--line);overflow:hidden;margin-top:8px}.hpinner{height:100%;background:linear-gradient(90deg,#5cb85c,var(--green))}.tempbar .hpinner{background:linear-gradient(90deg,#6db3e6,var(--temp))}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.check{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'info bonus' 'flags roll';align-items:center;gap:6px;padding:10px;min-width:0;overflow:hidden}.check>div:first-child{grid-area:info;min-width:0}.check>div:first-child strong{display:block;font-size:11px;line-height:1.1;white-space:normal;overflow:visible}.check>div:first-child .muted{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.check>div:nth-of-type(2){grid-area:bonus;justify-self:end}.check input[type=checkbox]{width:auto}.check button{grid-area:roll;justify-self:end;padding:6px 10px}.checkFlags{grid-area:flags;display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}.checkFlags label,.check>label{display:flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap}
+.inventory{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;max-width:100%;overflow:visible;padding-top:4px}.slot{height:86px;display:flex;align-items:center;justify-content:center;position:relative;background:var(--soft);border-radius:10px;overflow:visible}.slot img{width:64px;height:64px;object-fit:cover;border-radius:10px}.tip{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:95px;width:220px;background:#111116;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:12px;z-index:999;pointer-events:none;box-shadow:0 6px 14px rgba(0,0,0,0.6);white-space:normal}.tip strong{display:block;margin-bottom:4px;font-size:13px}.slot:hover .tip,.magicInfo:hover .tip,.abilityHover:hover .tip{display:block}.abilityHover{position:relative;display:block}.abilityHover .tip{bottom:auto;top:calc(100% + 8px);left:0;transform:none;width:min(320px,calc(100vw - 48px));pointer-events:none}
+
+.magicPanel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--text);position:relative;overflow:visible}.magicRibbon{display:grid;grid-template-columns:minmax(170px,1.2fr) repeat(3,minmax(110px,1fr));gap:10px;align-items:stretch}.magicClassBox,.magicMiniBox{min-height:74px;border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:10px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:visible}.magicClassLabel,.magicMiniLabel{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:6px;letter-spacing:.06em}.magicClassValue{font-size:14px;font-weight:800;color:var(--text);background:#111116;border:1px solid var(--line);border-radius:8px;padding:8px 10px;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.magicMiniValue{font-size:20px;font-weight:900;color:var(--text);line-height:1.1}.magicMiniSelect{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#111116;color:var(--text);font-size:14px;font-weight:800;text-align:center}
+.spellCard{position:relative;overflow:visible}.spellMeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.spellBadge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#222229;border:1px solid var(--line);font-size:11px;color:var(--text)}.spellDescPreview{margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--muted);font-size:12px;line-height:1.35}.magicInfo{position:relative;display:block}.magicInfo .tip{bottom:auto;top:calc(100% + 8px);left:0;transform:none;width:min(320px,calc(100vw - 48px));pointer-events:none}.spellPreparedLabel{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);margin-right:6px}.spellPreparedLabel input{width:auto}.spellPreparedOn{color:#9ed3a8;font-weight:700}
+.xpGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.xpBox label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.tightRows{display:grid;gap:8px}.singleField{margin-top:8px}
+@media(max-width:1200px){.inventory{grid-template-columns:repeat(auto-fit,minmax(72px,1fr))}}@media(max-width:900px){.magicRibbon{grid-template-columns:1fr 1fr}.magicClassBox{grid-column:1/-1}}@media(max-width:700px){.two,.row,.stats,.inventory,.checks,.sheetLayout,.xpGrid,.identityGrid,.sheetMetaTight,.vitalsUnderPassive{grid-template-columns:1fr;min-width:0}.sheetScroller{overflow-x:visible}.profile{grid-template-columns:1fr}.topAttrs{margin-bottom:12px}.avatar{margin:auto}.avatarCluster{grid-template-columns:64px 120px 64px}.magicRibbon{grid-template-columns:1fr}.magicClassBox,.magicMiniBox{min-height:auto}}
+
+.logoTitle{font-size:64px;text-align:center;letter-spacing:3px;margin-bottom:20px;font-weight:900;color:#ece8de}
+</style>
+</head>
+<body>
+<header><div><strong></strong><div class="muted" style="font-size:12px">V8.6 BETA</div></div></header>
+<nav><button class="alt" data-page="home">Início</button><button class="alt" data-page="ficha">Ficha</button><button class="alt" data-page="magias">Magias</button></nav>
+<main>
+<section id="home" class="page active"><div class="card hero"><h1 class="logoTitle">selesnya.vtt</h1><div class="actions" style="margin-top:12px"><button id="newSheetBtn">Nova Ficha</button></div></div><div class="card" style="margin-top:12px"><h2>Fichas salvas</h2><div id="sheetList" class="sheetGrid"></div></div><div class="card" style="margin-top:12px"><p class="muted">esse projeto e restrito a comunidade de RPG de mesa dedicada a Dungeons and Dragons(dnd) Selesnya. o projeto se ve em uma beta fechada para a comunidade, qualquer erro encontrado deve ser encaminhado a o deselvolvedor pombo08533 no discord</p></div></section>
+<section id="ficha" class="page"><div class="card topAttrs"><h2>Atributos</h2><div id="attrsWrap" class="attrs"></div></div><div class="sheetScroller"><div class="sheetLayout"><aside class="card"><h2>Salvaguardas</h2><div id="saves" class="checks"></div><h2 style="margin-top:14px">Perícias</h2><div id="skills" class="checks"></div></aside><section><div class="card" style="margin-bottom:12px"><h2>Personagem</h2><div class="profile"><div class="avatarCluster"><div class="miniStat"><label for="ac">CA</label><input id="ac" type="number" value="10"></div><div class="miniStat"><label for="iniciativa">INI</label><input id="iniciativa" type="text" value="+0"></div><div class="avatar"><img id="avatar_preview" src="https://via.placeholder.com/160x160?text=Avatar" alt="Avatar"></div><div class="miniStat"><label for="deslocamento">DE</label><input id="deslocamento" type="text" value="9m"></div><div class="miniStat"><label for="proficiencia">PRO</label><input id="proficiencia" type="text" value="+2"></div><div class="passiveBox"><div class="muted">Percepção Passiva</div><div id="passive_perception" class="value">10</div></div><div class="vitalsUnderPassive"><div class="statbox center"><div class="muted">HP</div><div id="hp_view" class="big">10</div></div><div class="statbox center"><div class="muted">HP TEMP</div><div id="temp_hp_view" class="big">0</div></div></div></div><div class="tightRows"><div class="row"><input id="nome" placeholder="Nome do personagem"><input id="classe" placeholder="Classe"></div><div class="row"><input id="raca" placeholder="Raça"><input id="antecedente" placeholder="Antecedente"></div><div class="row"><input id="nivel" type="number" value="1" placeholder="Nível"><input id="avatar_input" type="file" accept="image/*"></div><div class="xpGrid"><div class="xpBox"><label for="xp_current">XP atual</label><input id="xp_current" type="number" value="0" placeholder="XP atual"></div><div class="xpBox"><label for="xp_next">XP para upar</label><input id="xp_next" type="number" value="300" placeholder="XP necessário"></div></div></div></div><div class="row" style="margin-top:10px"><input id="hp" type="number" value="10" placeholder="HP atual"><input id="hpmax" type="number" value="10" placeholder="HP máximo"></div><div class="hpbar"><div id="hpinner" class="hpinner" style="width:100%"></div></div><div class="row" style="margin-top:10px"><input id="temp_hp" type="number" value="0" placeholder="Vida temporária"><input id="temp_hpmax" type="number" value="0" placeholder="Máx. vida temporária"></div><div class="hpbar tempbar"><div id="temp_hpinner" class="hpinner" style="width:0%"></div></div><div class="actions" style="margin-top:10px"><button id="shareSheetBtn">Compartilhar link</button><button id="downloadSheetBtn" class="alt">Baixar ficha</button><button id="importSheetBtn" class="alt">Importar ficha</button><input id="importSheetFile" type="file" accept="application/json" style="display:none"></div><div id="shareStatus" class="muted" style="margin-top:8px;font-size:12px"></div><textarea id="shareOutput" readonly style="display:none;margin-top:8px;min-height:84px"></textarea><a id="downloadLink" class="pill" style="display:none;margin-top:8px;text-decoration:none" download>Se o download não iniciar, clique aqui</a></div><div class="card" style="margin-bottom:12px"><h2>Habilidades do Personagem</h2><input id="ability_name" placeholder="Nome da habilidade"><textarea id="ability_desc" placeholder="Descrição da habilidade"></textarea><div class="actions"><button id="addAbilityBtn">Adicionar habilidade</button></div><div id="abilities"></div></div><div class="card"><h2>Ataques e Log</h2><div class="grid two"><div><div class="row"><input id="attack_name" placeholder="Nome da arma"><select id="attack_attr"><option value="for">Força</option><option value="des">Destreza</option><option value="con">Constituição</option><option value="int">Inteligência</option><option value="sab">Sabedoria</option><option value="car">Carisma</option></select></div><input id="attack_dice" placeholder="Dano ex: 1d8+5" style="margin-top:8px"><label class="pill" style="margin-top:8px;display:inline-flex;gap:6px;align-items:center"><input id="attack_prof" type="checkbox" style="width:auto"> Proficiente com a arma</label><div class="actions"><button id="addAttackBtn">Salvar ataque</button></div><div id="attacks"></div></div><div><div id="log" class="log"></div></div></div></div></section><aside class="card"><h2>Moedas</h2><div class="row"><div><div class="muted">PC</div><input id="gold_pc" type="number" value="0"></div><div><div class="muted">PP</div><input id="gold_pp" type="number" value="0"></div></div><div class="row" style="margin-top:6px"><div><div class="muted">PE</div><input id="gold_pe" type="number" value="0"></div><div><div class="muted">PL</div><input id="gold_pl" type="number" value="0"></div></div><div style="margin-top:6px"><div class="muted">PO</div><input id="gold_po" type="number" value="0"></div><div style="margin-top:8px"><div class="muted">Total em PO</div><div id="gold_total" class="big">0 PO</div></div><h2 style="margin-top:14px">Inventário (<span id="itemCount">0</span>)</h2><input id="item_nome" placeholder="Nome do item" style="margin-top:8px"><textarea id="item_desc" placeholder="Descrição"></textarea><input id="item_img" type="file" accept="image/*"><div class="row" style="margin-top:8px"><select id="item_rarity"><option value="Common">Common</option><option value="Uncommon">Uncommon</option><option value="Rare">Rare</option><option value="Epic">Epic</option><option value="Legendary">Legendary</option></select><input id="item_valor_po" type="number" value="0" placeholder="Valor em PO"></div><div class="actions"><button id="addItemBtn">Adicionar item</button></div><div id="inventario" class="inventory"></div></aside></div></div></section>
+
+<section id="magias" class="page">
+  <div class="card">
+    <h2>Conjuração</h2>
+    <div class="row">
+      <input id="spellcaster_class" placeholder="Classe de conjuração">
+      <select id="spell_key_attr">
+        <option value="int">Inteligência</option>
+        <option value="sab">Sabedoria</option>
+        <option value="car">Carisma</option>
+      </select>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="statbox center"><div class="muted">CD</div><div id="spell_dc_preview" class="big">10</div></div>
+      <div class="statbox center"><div class="muted">Ataque</div><div id="spell_attack_preview" class="big">+0</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h2>Adicionar magia</h2>
+    <input id="spell_name" placeholder="Nome da magia">
+    <textarea id="spell_desc" placeholder="Descrição"></textarea>
+    <div class="row">
+      <select id="spell_level"></select>
+      <input id="spell_dice" placeholder="Dano (ex: 1d8+3)">
+    </div>
+    <select id="spell_attr" style="margin-top:8px">
+      <option value="int">Inteligência</option>
+      <option value="sab">Sabedoria</option>
+      <option value="car">Carisma</option>
+    </select>
+    <div class="actions"><button id="addSpellBtn">Adicionar magia</button></div>
+  </div>
+
+  <div id="spellLevels" class="grid" style="margin-top:12px"></div>
+</section>
+
+</main>
+<script>
+const DEF='http://localhost:5000',AV='https://via.placeholder.com/160x160?text=Avatar',IT='https://via.placeholder.com/64?text=Item',A=[['for','Força'],['des','Destreza'],['con','Constituição'],['int','Inteligência'],['sab','Sabedoria'],['car','Carisma']].map(([id,n])=>({id,n})),S=[['Acrobacia','des'],['Arcanismo','int'],['Atletismo','for'],['Atuação','car'],['Enganação','car'],['Furtividade','des'],['História','int'],['Intimidação','car'],['Intuição','sab'],['Investigação','int'],['Lidar com Animais','sab'],['Medicina','sab'],['Natureza','int'],['Percepção','sab'],['Persuasão','car'],['Prestidigitação','des'],['Religião','int'],['Sobrevivência','sab']].map(([name,attr])=>({name,attr})),$=id=>document.getElementById(id),sg=v=>v>=0?`+${v}`:`${v}`,md=v=>Math.floor((v-10)/2),esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),pj=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch{return f}},st={api:localStorage.getItem('bot_api_url')||DEF,last:0,attacks:[],spells:{},avatar:AV,items:[],abilities:[],save:pj('save_profs',{}),skill:pj('skill_profs',{}),expert:pj('skill_expertise',{}),sheets:pj('fichas_multiplas',[]),id:localStorage.getItem('ficha_atual_id')||'principal'};
+const sk=()=>`ficha_dnd_${st.id}`,read=()=>pj(sk(),{}),write=d=>localStorage.setItem(sk(),JSON.stringify(d)),txt=(id,v)=>$(id)&&($(id).textContent=v),val=(id,v)=>$(id)&&($(id).value=v),prof=()=>parseInt(String($('proficiencia')?.value||0).replace(/[^0-9-]/g,''),10)||0,gm=a=>md(parseInt($(a)?.value||0,10)),show=id=>document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+function previewText(t){let words=String(t||'Sem descrição').trim().split(' ').filter(Boolean);return words.slice(0,10).join(' ')+(words.length>10?'…':'')}
+function encodeShareData(data){try{return btoa(unescape(encodeURIComponent(JSON.stringify(data))))}catch{return''}}
+function decodeShareData(data){try{return JSON.parse(decodeURIComponent(escape(atob(data))))}catch{return null}}
+function sanitizeFileName(name){return String(name||'ficha').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'_').replace(/^_+|_+$/g,'')||'ficha'}
+function importState(data,newId){if(!data||typeof data!=='object')return alert('Arquivo ou link de ficha inválido.');if(newId){st.id='ficha_'+Date.now();localStorage.setItem('ficha_atual_id',st.id)}st.attacks=Array.isArray(data.attacks)?data.attacks:[];st.spells=data.spells&&typeof data.spells==='object'?data.spells:{};st.abilities=Array.isArray(data.abilities)?data.abilities:[];st.items=Array.isArray(data.inventario)?data.inventario:[];st.avatar=data.personagem?.avatar||AV;st.save=data.saveState&&typeof data.saveState==='object'?data.saveState:{};st.skill=data.skillState&&typeof data.skillState==='object'?data.skillState:{};st.expert=data.skillExpertise&&typeof data.skillExpertise==='object'?data.skillExpertise:{};write(data);loadSheet();saveChecks();saveSheet();show('ficha')}
+function setShareStatus(msg){txt('shareStatus',msg||'')}
+function setShareOutput(value,show){let box=$('shareOutput');if(!box)return;box.value=value||'';box.style.display=show?'block':'none'}
+function setDownloadLink(url,name){let a=$('downloadLink');if(!a)return;if(url){a.href=url;a.download=name;a.style.display='inline-block'}else{a.removeAttribute('href');a.style.display='none'}}
+function shareCurrentSheet(){let payload=encodeShareData(stateObj());if(!payload)return alert('Não foi possível gerar o link da ficha.');let url=location.origin+location.pathname+'#share='+payload;setDownloadLink('', '');setShareOutput(url,true);setShareStatus('Link da ficha gerado abaixo.');let box=$('shareOutput');if(box){box.focus();box.select()}if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(url).then(()=>setShareStatus('Link da ficha copiado e exibido abaixo.')).catch(()=>setShareStatus('Não foi possível copiar automaticamente. Copie o link exibido abaixo.'))}}
+function downloadCurrentSheet(){let data=JSON.stringify(stateObj(),null,2),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),name=sanitizeFileName($('nome')?.value||st.id)+'.json',a=document.createElement('a');setDownloadLink(url,name);setShareOutput(data,true);setShareStatus('Arquivo JSON da ficha gerado. Se o download não iniciar, use o link exibido abaixo.');a.href=url;a.download=name;document.body.appendChild(a);try{a.click()}catch{}a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000)}
+function importSheetFromFile(file){if(!file)return;let r=new FileReader();r.onload=e=>{try{importState(JSON.parse(String(e.target?.result||'{}')),true)}catch{alert('O arquivo selecionado não é uma ficha válida.')}};r.readAsText(file)}
+function tryImportSharedLink(){let hash=location.hash||'';if(!hash.startsWith('#share='))return;let data=decodeShareData(hash.slice(7));if(!data)return;importState(data,true);history.replaceState(null,'',location.pathname+location.search)}
+function rollDice(e){e=String(e).replace(/\s/g,'');let b=0;if(e.includes('+')){let p=e.split('+');e=p[0];b=parseInt(p[1],10)||0}let[q,d]=e.split('d').map(Number);if(!q||!d||q<1||d<1)return 0;let t=0;for(let i=0;i<q;i++)t+=Math.floor(Math.random()*d)+1;return t+b}
+function log(t){let b=$('log');if(!b)return;let d=document.createElement('div');d.textContent=t;b.prepend(d)}
+function gold(){return Number($('gold_pc')?.value||0)/100+Number($('gold_pp')?.value||0)/10+Number($('gold_pe')?.value||0)/2+Number($('gold_po')?.value||0)+Number($('gold_pl')?.value||0)*10}
+function sb(n){let i=S.findIndex(s=>s.name===n),p=prof();return i<0?0:gm(S[i].attr)+(st.expert[i]?p*2:st.skill[i]?p:0)}
+function saveChecks(){localStorage.setItem('save_profs',JSON.stringify(st.save));localStorage.setItem('skill_profs',JSON.stringify(st.skill));localStorage.setItem('skill_expertise',JSON.stringify(st.expert))}
+function spellCastingBonus(){return gm($('spell_key_attr')?.value||'int')+prof()}
+function spellSaveDC(){return 8+prof()+gm($('spell_key_attr')?.value||'int')}
+function updateSpellCastingPreview(){txt('spell_dc_preview',String(spellSaveDC()));txt('spell_attack_preview',sg(spellCastingBonus()))}
+function updateStats(){A.forEach(a=>txt(a.id+'_mod',sg(gm(a.id))));let n=Number($('nivel')?.value||1),p=2+Math.floor((Math.max(1,n)-1)/4),pe=$('proficiencia');if(pe&&document.activeElement!==pe)pe.value=sg(p);let hp=Number($('hp')?.value||0),mx=Number($('hpmax')?.value||0),tempHp=Number($('temp_hp')?.value||0),tempMx=Number($('temp_hpmax')?.value||0);$('hpinner').style.width=(mx>0?Math.max(0,Math.min(100,hp/mx*100)):0)+'%';$('temp_hpinner').style.width=(tempMx>0?Math.max(0,Math.min(100,tempHp/tempMx*100)):0)+'%';txt('hp_view',String(hp));txt('temp_hp_view',String(tempHp));txt('gold_total',gold().toFixed(2).replace(/\.00$/,'')+' PO');txt('passive_perception',String(10+sb('Percepção')));updateSpellCastingPreview();renderSaves();renderSkills()}
+function renderAttrs(){let w=$('attrsWrap');if(!w)return;w.innerHTML='';A.forEach(a=>{let d=document.createElement('div');d.className='attr';d.innerHTML=`<div class="attrName">${esc(a.n)}</div><div class="mod" id="${a.id}_mod">+0</div><input id="${a.id}" type="number" value="10">`;w.appendChild(d)})}
+function renderChecks(boxId,list,isSkill){let b=$(boxId);if(!b)return;b.innerHTML='';list.forEach((x,i)=>{let id=isSkill?i:x.id,m=isSkill?gm(x.attr)+(st.expert[i]?prof()*2:st.skill[i]?prof():0):gm(x.id)+(st.save[x.id]?prof():0),c=document.createElement('div');c.className='check';let flags=isSkill?`<div class="checkFlags"><label><input data-skill="${i}" type="checkbox" ${st.skill[i]?'checked':''}> Prof</label><label><input data-exp="${i}" type="checkbox" ${st.expert[i]?'checked':''}> Esp.</label></div>`:`<label><input data-save="${x.id}" type="checkbox" ${st.save[x.id]?'checked':''}> Prof</label>`;c.innerHTML=`<div><strong>${esc(x.n||x.name)}</strong><div class="muted">${esc((x.id||x.attr).toUpperCase())}</div></div>${flags}<div><strong>${esc(sg(m))}</strong></div><button data-roll="${isSkill?'skill':'save'}" data-id="${id}">Rolar</button>`;b.appendChild(c)})}
+const renderSaves=()=>renderChecks('saves',A,0),renderSkills=()=>renderChecks('skills',S,1);
+function renderList(id,list,kind){let b=$(id);if(!b)return;b.innerHTML='';const attrName=a=>({for:'Força',des:'Destreza',con:'Constituição',int:'Inteligência',sab:'Sabedoria',car:'Carisma'})[a]||a;list.forEach((x,i)=>{let d=document.createElement('div');d.className=kind;d.innerHTML=kind==='attack'?`<strong>${esc(x.name)}</strong><div class="muted">${esc(attrName(x.attr))} • ${esc(x.dice)} • ${x.prof?'Proficiente':'Sem proficiência'}</div><div class="actions"><button data-a="${i}">Ataque</button><button data-d="${i}">Dano</button><button data-b="${i}">Ambos</button></div>`:`<div class="abilityHover"><strong>${esc(x.name)}</strong><div class="muted" style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(previewText(x.desc||'Sem descrição'))}</div><div class="tip"><strong>${esc(x.name)}</strong><div style="margin-top:6px">${esc(x.desc||'Sem descrição')}</div></div></div><div class="actions"><button data-rmab="${i}">Remover</button></div>`;b.appendChild(d)})}
+const renderAttacks=()=>renderList('attacks',st.attacks,'attack'),renderAbilities=()=>renderList('abilities',st.abilities,'abilityItem');
+function rarity(r){return r==='Uncommon'?'#429550':r==='Rare'?'#336fd6':r==='Epic'?'#8645b9':r==='Legendary'?'#cb951c':'#b9aa97'}
+function renderInv(){let b=$('inventario');if(!b)return;b.innerHTML='';txt('itemCount',String(st.items.length));st.items.forEach((it,i)=>{let d=document.createElement('div'),tooltipText=[it.nome||'Item sem nome',it.rarity||'Common',it.desc||'Sem descrição',`Valor: ${Number(it.valor_po||0)} PO`].join('\n');d.className='slot';d.style.border=`1px solid ${rarity(it.rarity)}`;d.title=tooltipText;d.innerHTML=`<img src="${esc(it.img||IT)}" alt="${esc(it.nome)}" title="${esc(tooltipText)}"><div class="tip"><strong>${esc(it.nome)}</strong><br>${esc(it.rarity)}<div style="margin-top:6px">${esc(it.desc||'Sem descrição')}</div><div class="muted" style="margin-top:6px">Valor: ${esc(Number(it.valor_po||0))} PO</div></div><button data-rmit="${i}" style="position:absolute;right:4px;bottom:4px;padding:3px 6px;font-size:10px">X</button>`;b.appendChild(d)})}
+function initSpellUI(){let wrap=$('spellLevels'),sel=$('spell_level');if(!wrap||!sel)return;wrap.innerHTML='';sel.innerHTML='';for(let i=0;i<=9;i++){st.spells[i]??={slots:0,spells:[]};sel.innerHTML+=`<option value="${i}">${i}º círculo</option>`;let d=document.createElement('div');d.className='spell';d.innerHTML=`<strong>${i}º círculo</strong><div style="margin:8px 0"><input data-slot="${i}" type="number" value="${st.spells[i].slots}" style="width:90px"></div><div id="spell_list_${i}"></div>`;wrap.appendChild(d);renderSpells(i)}}
+function renderSpells(l){let list=$('spell_list_'+l),data=st.spells[l];if(!list||!data)return;list.innerHTML=`<div class="muted">Slots restantes: ${data.slots}</div>`;data.spells.forEach((s,i)=>{let hasDamage=!!String(s.dice||'').trim(),hasDesc=!!String(s.desc||'').trim(),attackBonusText=s.attackBonus||'—',dcText=s.dc||'—',damageText=hasDamage?s.dice:'Sem dano';let card=document.createElement('div');card.className='attack spellCard';card.innerHTML=`<div class="magicInfo"><strong>${esc(s.name)}</strong>${s.prepared?` <span class="spellPreparedOn">• Preparada</span>`:''}${hasDesc?`<div class="spellDescPreview">${esc(previewText(s.desc))}</div><div class="tip"><strong>${esc(s.name)}</strong><div style="margin-top:6px">${esc(s.desc)}</div></div>`:''}</div><div class="spellMeta"><span class="spellBadge">${esc(s.attr.toUpperCase())}</span><span class="spellBadge">Dano: ${esc(damageText)}</span><span class="spellBadge">CD: ${esc(dcText)}</span><span class="spellBadge">Ataque: ${esc(attackBonusText)}</span></div><div class="actions"><label class="spellPreparedLabel"><input type="checkbox" data-sprep="${l}:${i}" ${s.prepared?'checked':''}> Preparada</label><button data-sa="${l}:${i}">Ataque</button><button data-sc="${l}:${i}">CD</button>${hasDamage?`<button data-sd="${l}:${i}">Dano</button><button data-sb="${l}:${i}">Ambos</button>`:''}<button data-rmspell="${l}:${i}" class="alt">Remover</button></div>`;list.appendChild(card)})}
+function stateObj(){return{attrs:Object.fromEntries(A.map(a=>[a.id,$(a.id)?.value||10]).concat([['proficiencia',$('proficiencia')?.value||'+2'],['iniciativa',$('iniciativa')?.value||'+0'],['deslocamento',$('deslocamento')?.value||'9m']])),personagem:{nome:$('nome')?.value||'',classe:$('classe')?.value||'',raca:$('raca')?.value||'',antecedente:$('antecedente')?.value||'',nivel:$('nivel')?.value||1,avatar:st.avatar,xpAtual:$('xp_current')?.value||0,xpProximo:$('xp_next')?.value||300},combate:{ac:$('ac')?.value||10,hp:$('hp')?.value||10,hpmax:$('hpmax')?.value||10,tempHp:$('temp_hp')?.value||0,tempHpMax:$('temp_hpmax')?.value||0,pc:$('gold_pc')?.value||0,pp:$('gold_pp')?.value||0,pe:$('gold_pe')?.value||0,po:$('gold_po')?.value||0,pl:$('gold_pl')?.value||0},conjuracao:{classe:$('spellcaster_class')?.value||'',habilidade:$('spell_key_attr')?.value||'int'},attacks:st.attacks,spells:st.spells,abilities:st.abilities,inventario:st.items,skillExpertise:st.expert,saveState:st.save,skillState:st.skill}}
+function renderSheetList(){let b=$('sheetList');if(!b)return;if(!Array.isArray(st.sheets))st.sheets=[];b.innerHTML=st.sheets.length?'':'<div class="muted">Nenhuma ficha salva ainda.</div>';st.sheets.forEach(s=>{let d=document.createElement('div');d.className='sheetCard';d.innerHTML=`<div class="sheetCardMain" onclick="openSheetFromList('${esc(s.id)}')"><img src="${esc(s.personagem?.avatar||AV)}" alt="Avatar"><div><div class="sheetName">${esc(s.personagem?.nome||'Sem nome')}</div><div class="muted">Classe: ${esc(s.personagem?.classe||'—')}</div><div class="muted">Raça: ${esc(s.personagem?.raca||'—')}</div><div class="muted">Nível: ${esc(s.personagem?.nivel||1)}</div></div></div><div class="sheetCardActions"><button type="button" class="dangerBtn" onclick="deleteSheetFromList('${esc(s.id)}');event.stopPropagation();">Apagar</button></div>`;b.appendChild(d)})}
+function saveSheet(){write(stateObj());let s={id:st.id,personagem:stateObj().personagem},i=st.sheets.findIndex(x=>x.id===st.id);i>=0?st.sheets[i]=s:st.sheets.push(s);localStorage.setItem('fichas_multiplas',JSON.stringify(st.sheets));renderSheetList()}
+function clearUI(){A.forEach(a=>val(a.id,10));['proficiencia','iniciativa','deslocamento'].forEach((k,i)=>val(k,['+2','+0','9m'][i]));['nome','classe','raca','antecedente','spellcaster_class','spell_desc','spell_dice'].forEach(k=>$(k)&&val(k,''));val('spell_key_attr','int');val('spell_name','');val('nivel',1);val('xp_current',0);val('xp_next',300);['ac','hp','hpmax','temp_hp','temp_hpmax'].forEach((k,i)=>val(k,i<3?10:0));['gold_pc','gold_pp','gold_pe','gold_po','gold_pl'].forEach(k=>val(k,0));$('avatar_preview').src=AV;$('avatar_input').value=''}
+function loadSheet(){clearUI();let d=read();if(d.attrs)Object.keys(d.attrs).forEach(k=>val(k,d.attrs[k]));if(d.personagem){val('nome',d.personagem.nome||'');val('classe',d.personagem.classe||'');val('raca',d.personagem.raca||'');val('antecedente',d.personagem.antecedente||'');val('nivel',d.personagem.nivel||1);val('xp_current',d.personagem.xpAtual??0);val('xp_next',d.personagem.xpProximo??300);st.avatar=d.personagem.avatar||AV;$('avatar_preview').src=st.avatar}else st.avatar=AV;if(d.combate)Object.entries({ac:'ac',hp:'hp',hpmax:'hpmax',tempHp:'temp_hp',tempHpMax:'temp_hpmax',pc:'gold_pc',pp:'gold_pp',pe:'gold_pe',po:'gold_po',pl:'gold_pl'}).forEach(([k,v])=>val(v,d.combate[k]??(k.includes('hp')||k==='ac'?10:0)));val('spellcaster_class',d.conjuracao?.classe||'');val('spell_key_attr',d.conjuracao?.habilidade||'int');st.attacks=Array.isArray(d.attacks)?d.attacks:[];st.spells=d.spells&&typeof d.spells==='object'?d.spells:{};st.abilities=Array.isArray(d.abilities)?d.abilities:[];st.items=Array.isArray(d.inventario)?d.inventario:[];st.save=d.saveState&&typeof d.saveState==='object'?d.saveState:st.save;st.skill=d.skillState&&typeof d.skillState==='object'?d.skillState:st.skill;st.expert=d.skillExpertise&&typeof d.skillExpertise==='object'?d.skillExpertise:st.expert;renderAttacks();renderAbilities();renderInv();initSpellUI();updateStats()}
+function newSheet(){st.id='ficha_'+Date.now();localStorage.setItem('ficha_atual_id',st.id);st.attacks=[];st.spells={};st.abilities=[];st.items=[];st.avatar=AV;write({attrs:{for:10,des:10,con:10,int:10,sab:10,car:10,proficiencia:'+2',iniciativa:'+0',deslocamento:'9m'},personagem:{nome:'Novo Personagem',classe:'—',raca:'—',antecedente:'—',nivel:1,avatar:AV,xpAtual:0,xpProximo:300},combate:{ac:10,hp:10,hpmax:10,tempHp:0,tempHpMax:0,pc:0,pp:0,pe:0,po:0,pl:0},conjuracao:{classe:'',habilidade:'int'},attacks:[],spells:{},abilities:[],inventario:[],skillExpertise:{},saveState:{},skillState:{}});loadSheet();saveSheet();show('ficha')}
+function loadById(id){st.id=id;localStorage.setItem('ficha_atual_id',id);st.attacks=[];st.spells={};st.abilities=[];st.items=[];st.avatar=AV;loadSheet();renderSheetList();show('ficha')}
+async function fetchBotLogs(){try{let r=await fetch(st.api+'/rolls');if(!r.ok)return $('botStatus').textContent='Bot: erro '+r.status,$('botStatus').style.color='#b34f4f';let d=await r.json();$('botStatus').textContent='Bot: conectado';$('botStatus').style.color='#2f7a39';d.forEach(x=>{if(x.id>st.last){log(`[BOT] ${x.user} usou ${x.expr} → ${x.total}`);st.last=x.id}})}catch{let el=$('botStatus');if(el){el.textContent='Bot: não encontrado';el.style.color='#b34f4f'}}}
+function tests(){try{console.assert(encodeShareData({a:1}).length>0,'encodeShareData falhou');console.assert(JSON.stringify(decodeShareData(encodeShareData({teste:'ok'})))===JSON.stringify({teste:'ok'}),'decodeShareData falhou');console.assert(sanitizeFileName('Árvore do Caos!!')==='Arvore_do_Caos','sanitizeFileName falhou');console.assert(rollDice('1d1')===1,'rollDice falhou para 1d1');console.assert(rollDice('texto')===0,'rollDice deveria retornar 0 em entrada inválida');console.assert(['#429550','#336fd6','#8645b9','#cb951c','#b9aa97'].includes(rarity('Rare')),'rarity falhou');console.assert(spellSaveDC()>=8,'spellSaveDC falhou')}catch(err){console.error('Falha nos testes internos:',err)}}
+function deleteSheetById(delId){if(!window.confirm('Deseja apagar esta ficha?'))return;localStorage.removeItem(`ficha_dnd_${delId}`);st.sheets=(Array.isArray(st.sheets)?st.sheets:[]).filter(x=>x.id!==delId);localStorage.setItem('fichas_multiplas',JSON.stringify(st.sheets));if(st.id===delId){if(st.sheets.length){st.id=st.sheets[0].id;localStorage.setItem('ficha_atual_id',st.id);loadSheet()}else{st.id='principal';localStorage.setItem('ficha_atual_id',st.id);st.attacks=[];st.spells={};st.abilities=[];st.items=[];st.avatar=AV;write({attrs:{for:10,des:10,con:10,int:10,sab:10,car:10,proficiencia:'+2',iniciativa:'+0',deslocamento:'9m'},personagem:{nome:'Novo Personagem',classe:'—',raca:'—',antecedente:'—',nivel:1,avatar:AV,xpAtual:0,xpProximo:300},combate:{ac:10,hp:10,hpmax:10,tempHp:0,tempHpMax:0,pc:0,pp:0,pe:0,po:0,pl:0},conjuracao:{classe:'',habilidade:'int'},attacks:[],spells:{},abilities:[],inventario:[],skillExpertise:{},saveState:{},skillState:{}});loadSheet()}}renderSheetList();show('home')}
+window.deleteSheetFromList=function(id){deleteSheetById(id)};
+window.openSheetFromList=function(id){loadById(id)};
+function bind(){
+  document.body.addEventListener('click',e=>{
+    let t=e.target,d=t.dataset;
+    if(t.matches('nav button[data-page]'))show(t.dataset.page);
+    if(t.id==='newSheetBtn')newSheet();
+    if(t.id==='shareSheetBtn')shareCurrentSheet();
+    if(t.id==='downloadSheetBtn')downloadCurrentSheet();
+    if(t.id==='importSheetBtn')$('importSheetFile').click();
+    if(t.id==='backToSheetBtn')show('ficha');
+
+    if(t.id==='addAbilityBtn'){
+      let name=$('ability_name').value.trim(),desc=$('ability_desc').value.trim();
+      if(name){
+        st.abilities.push({name,desc});
+        $('ability_name').value='';
+        $('ability_desc').value='';
+        renderAbilities();
+        saveSheet();
+      }
+    }
+
+    if(t.id==='addAttackBtn'){
+      let name=$('attack_name').value.trim(),attr=$('attack_attr').value,dice=$('attack_dice').value.trim(),profWeapon=$('attack_prof').checked;
+      if(name&&dice){
+        st.attacks.push({name,attr,dice,prof:profWeapon});
+        renderAttacks();
+        saveSheet();
+      }
+    }
+
+    if(t.id==='addItemBtn'){
+      let nome=$('item_nome').value.trim(),desc=$('item_desc').value.trim(),rarityValue=$('item_rarity').value,valor_po=Number($('item_valor_po').value||0),file=$('item_img').files?.[0];
+      let done=img=>{
+        st.items.push({nome,desc,rarity:rarityValue,valor_po,img:img||null});
+        ['item_nome','item_desc'].forEach(id=>val(id,''));
+        val('item_valor_po',0);
+        $('item_img').value='';
+        renderInv();
+        saveSheet();
+      };
+      if(nome){
+        if(file){
+          let r=new FileReader();
+          r.onload=x=>done(x.target.result);
+          r.readAsDataURL(file);
+        }else done(null);
+      }
+    }
+
+    if(t.id==='addSpellBtn'){
+      let name=$('spell_name')?.value.trim()||'';
+      let desc=$('spell_desc')?.value.trim()||'';
+      let level=+($('spell_level')?.value||0);
+      let dice=$('spell_dice')?.value.trim()||'';
+      let attr=$('spell_attr')?.value||'int';
+      if(name){
+        st.spells[level]??={slots:0,spells:[]};
+        st.spells[level].spells.push({name,desc,dice,attr,dc:spellSaveDC(),attackBonus:sg(spellCastingBonus()),prepared:false});
+        $('spell_name').value='';
+        $('spell_desc').value='';
+        $('spell_dice').value='';
+        renderSpells(level);
+        saveSheet();
+      }
+    }
+
+    if(d.save!==undefined){st.save[d.save]=t.checked;saveChecks();updateStats();saveSheet()}
+    if(d.skill!==undefined){st.skill[d.skill]=t.checked;if(!t.checked)st.expert[d.skill]=false;saveChecks();updateStats();saveSheet()}
+    if(d.exp!==undefined){if(t.checked&&!st.skill[d.exp])st.skill[d.exp]=true;st.expert[d.exp]=t.checked;saveChecks();updateStats();saveSheet()}
+
+    if(d.roll==='save'){
+      let a=A.find(x=>String(x.id)===String(d.id));
+      log(`Salvaguarda ${a?a.n:d.id}: ${Math.floor(Math.random()*20)+1+gm(d.id)+(st.save[d.id]?prof():0)}`);
+    }
+    if(d.roll==='skill'){
+      let i=+d.id,s=S[i],p=prof(),b=st.expert[i]?p*2:st.skill[i]?p:0;
+      log(`Perícia ${s.name}: ${Math.floor(Math.random()*20)+1+gm(s.attr)+b}`);
+    }
+
+    if(d.a!==undefined){let a=st.attacks[d.a],bonus=(a.prof?prof():0);log(a.name+' Ataque: '+(Math.floor(Math.random()*20)+1+gm(a.attr)+bonus))}
+    if(d.d!==undefined){let a=st.attacks[d.d];log(a.name+' Dano: '+rollDice(a.dice))}
+    if(d.b!==undefined){let a=st.attacks[d.b],bonus=(a.prof?prof():0);log(a.name+' Ataque: '+(Math.floor(Math.random()*20)+1+gm(a.attr)+bonus));log(a.name+' Dano: '+rollDice(a.dice))}
+    if(d.rmit!==undefined){st.items.splice(+d.rmit,1);renderInv();saveSheet()}
+    if(d.rmab!==undefined){st.abilities.splice(+d.rmab,1);renderAbilities();saveSheet()}
+
+    if(d.sprep!==undefined){
+      let [l,i]=String(d.sprep).split(':');
+      let s=st.spells[l]?.spells?.[i];
+      if(s){
+        s.prepared=!!t.checked;
+        renderSpells(+l);
+        saveSheet();
+      }
+    }
+    if(d.rmspell!==undefined){
+      let [l,i]=String(d.rmspell).split(':');
+      if(st.spells[l]?.spells?.[i]!==undefined){
+        st.spells[l].spells.splice(+i,1);
+        renderSpells(+l);
+        saveSheet();
+      }
+    }
+    if(d.sa){
+      let [l,i]=d.sa.split(':'),s=st.spells[l]?.spells?.[i];
+      if(!s)return;
+      let ex=parseInt(String(s.attackBonus||'').replace(/[^0-9-]/g,''),10)||0;
+      log(s.name+' Ataque mágico: '+(Math.floor(Math.random()*20)+1+ex));
+    }
+    if(d.sc){
+      let [l,i]=d.sc.split(':'),s=st.spells[l]?.spells?.[i];
+      if(!s)return;
+      log(s.dc?s.name+' CD de resistência: '+s.dc:s.name+' CD de magia não definida.');
+    }
+    if(d.sd){
+      let [l,i]=d.sd.split(':'),s=st.spells[l]?.spells?.[i];
+      if(!s)return;
+      if(!String(s.dice||'').trim()) log(s.name+' não causa dano.');
+      else log(s.name+' Dano mágico: '+rollDice(s.dice));
+    }
+    if(d.sb){
+      let [l,i]=d.sb.split(':'),sp=st.spells[l],s=sp?.spells?.[i];
+      if(!sp||!s||sp.slots<=0) alert('Sem slots desse círculo');
+      else{
+        sp.slots--;
+        let ex=parseInt(String(s.attackBonus||'').replace(/[^0-9-]/g,''),10)||0;
+        log(s.name+' Ataque mágico: '+(Math.floor(Math.random()*20)+1+ex));
+        if(String(s.dice||'').trim()) log(s.name+' Dano mágico: '+rollDice(s.dice));
+        renderSpells(+l);
+        saveSheet();
+      }
+    }
+  });
+
+  document.body.addEventListener('input',e=>{
+    let t=e.target;
+    if(['INPUT','TEXTAREA','SELECT'].includes(t.tagName)){
+      if(t.dataset.slot!==undefined){
+        st.spells[t.dataset.slot]??={slots:0,spells:[]};
+        st.spells[t.dataset.slot].slots=parseInt(t.value,10)||0;
+        renderSpells(+t.dataset.slot);
+      }
+      updateStats();
+      saveSheet();
+    }
+  });
+
+  $('avatar_input')?.addEventListener('change',()=>{
+    let f=$('avatar_input').files?.[0];
+    if(!f)return;
+    let r=new FileReader();
+    r.onload=e=>{st.avatar=e.target.result;$('avatar_preview').src=st.avatar;saveSheet();renderSheetList()};
+    r.readAsDataURL(f);
+  });
+
+  $('importSheetFile')?.addEventListener('change',()=>{
+    let f=$('importSheetFile').files?.[0];
+    importSheetFromFile(f);
+    $('importSheetFile').value='';
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  renderAttrs();
+  bind();
+  renderAbilities();
+  renderInv();
+  initSpellUI();
+  loadSheet();
+  renderSheetList();
+  tryImportSharedLink();
+  updateSpellCastingPreview();
+  tests();
+});
+</script>
+</body>
+</html>
